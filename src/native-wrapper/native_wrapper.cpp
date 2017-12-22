@@ -45,27 +45,30 @@ NativeWrapper * NativeWrapper::get_instance() {
 NativeWrapper::NativeWrapper(sc_core::sc_module_name name) : sc_module(name),
                             irq("irq")
 {
-	interrupt = false;
+	SC_METHOD(hal_wait_for_irq);
 }
 
 void NativeWrapper::hal_write32(unsigned int addr, unsigned int data)
 {
-	abort(); // TODO
+	socket.write(addr, data);
 }
 
 unsigned int NativeWrapper::hal_read32(unsigned int addr)
 {
-	abort(); // TODO
+	unsigned int tmp;
+	socket.read(addr, tmp);
+	return tmp;
 }
 
 void NativeWrapper::hal_cpu_relax()
 {
-	abort(); // TODO
+	hal_wait_for_irq();
 }
 
 void NativeWrapper::hal_wait_for_irq()
 {
-	abort(); // TODO
+	next_trigger(irq.posedge_event());
+	interrupt_event.notify();
 }
 
 void NativeWrapper::compute()
