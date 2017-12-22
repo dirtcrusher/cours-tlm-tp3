@@ -1,9 +1,9 @@
 CC=gcc
 INCLUDE=-I. -I../../
-CFLAGS=$(INCLUDE)
+CFLAGS=$(INCLUDE) -c
 
-main.o: # TODO: dependancies
-	echo "Unimplemented rule"; exit 1
+main.o: ../main.c hal.h ../../native-wrapper/native_wrapper.cpp ../../native-wrapper/native_wrapper.h
+	$(CC) $(CFLAGS) ../main.c -o $@
 
 .PHONY: clean realclean
 clean:

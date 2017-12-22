@@ -25,16 +25,14 @@ sections.txt: $(EXEC)
 	$(TARGET_READELF) -S $< > $@
 
 
-$(EXEC): # TODO: dependencies
-	echo "Rule for linking not implemented."; exit 1
-# TODO: use $(TARGET_LD), and use the -T option to point to linker script ldscript
+$(EXEC): main.o boot.o it.o 
+	$(TARGET_LD) -T ldscript -o $@ main.o ../../native-wrapper/native_wrapper.o it.o boot.o
 
-main.o: # TODO: dependencies
-	echo "Rule for compilation not implemented"; exit 1
-# TODO: compile with target C compiler
+main.o: ../main.c ../../native-wrapper/native_wrapper.h ../../native-wrapper/native_wrapper.cpp
+	$(TARGET_CC) $(INCLUDE) -c -o $@ $<
 
 %.o: %.s
-	echo "Rule for assembly not implemented"; exit 1
+	$(TARGET_CC) -c -o $@ $^
 
 .PHONY: clean realclean
 clean:
