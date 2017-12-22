@@ -1,3 +1,5 @@
+// vim: set noexpandtab: sw=4: ts=4
+
 #include "ensitlm.h"
 #include "native_wrapper.h"
 
@@ -14,19 +16,19 @@ extern "C" int main();
 extern "C" void interrupt_handler();
 
 extern "C" void hal_write32(uint32_t addr, uint32_t data) {
-	abort(); // TODO
+	NativeWrapper::get_instance()->hal_write32(addr, data);
 }
 
 extern "C" unsigned int hal_read32(uint32_t addr) {
-	abort(); // TODO
+	return NativeWrapper::get_instance()->hal_read32(addr);
 }
 
 extern "C" void hal_cpu_relax() {
-	abort(); // TODO
+	NativeWrapper::get_instance()->hal_cpu_relax();
 }
 
 extern "C" void hal_wait_for_irq() {
-	abort(); // TODO
+	NativeWrapper::get_instance()->hal_wait_for_irq();
 }
 
 /* To keep it simple, the soft wrapper is a singleton, we can
@@ -41,9 +43,9 @@ NativeWrapper * NativeWrapper::get_instance() {
 }
 
 NativeWrapper::NativeWrapper(sc_core::sc_module_name name) : sc_module(name),
-							     irq("irq")
+                            irq("irq")
 {
-	abort(); // TODO
+	interrupt = false;
 }
 
 void NativeWrapper::hal_write32(unsigned int addr, unsigned int data)

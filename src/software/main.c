@@ -240,6 +240,7 @@ int main() {
 				break;
 			}
 		}
+        hal_cpu_relax();
 	}
 
 	return 0;
