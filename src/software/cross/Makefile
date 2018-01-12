@@ -26,9 +26,9 @@ sections.txt: $(EXEC)
 
 
 $(EXEC): main.o boot.o it.o 
-	$(TARGET_LD) -T ldscript -o $@ main.o ../../native-wrapper/native_wrapper.o it.o boot.o
+	$(TARGET_LD) -T ldscript -o $@ main.o it.o boot.o
 
-main.o: ../main.c ../../native-wrapper/native_wrapper.h ../../native-wrapper/native_wrapper.cpp
+main.o: ../main.c
 	$(TARGET_CC) $(INCLUDE) -c -o $@ $<
 
 %.o: %.s

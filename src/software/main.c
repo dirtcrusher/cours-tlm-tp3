@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 
 volatile int irq_received = 0;
 
@@ -29,8 +30,7 @@ volatile int irq_received = 0;
 #define SW_VGA_HEIGHT VGA_HEIGHT/4
 
 int get_pixel(uint32_t base_addr, int x, int y) {
-	uint32_t addr = base_addr +
-		ALIGN( (x / CHAR_BIT) + (y * (VGA_LINE / CHAR_BIT)) );
+	uint32_t addr = base_addr + ALIGN( (x / CHAR_BIT) + (y * (VGA_LINE / CHAR_BIT)) );
 	int bit = 31 - x % (sizeof(uint32_t) * CHAR_BIT);
 
 	uint32_t data = hal_read32(addr);
