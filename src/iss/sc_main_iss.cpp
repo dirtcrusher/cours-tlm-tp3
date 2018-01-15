@@ -31,6 +31,7 @@ int sc_main(int, char **) {
 	Vga vga("vga");
 	Intc intc("intc");
 	Gpio gpio("gpio");
+	UART uart("uart");
 
 
 	sc_core::sc_signal<bool> timer_irq("timer_irq");
@@ -64,6 +65,7 @@ int sc_main(int, char **) {
 	bus.initiator(timer.target);
 	bus.initiator(gpio.target);
 	bus.initiator(intc.target);
+	bus.initiator(uart.target);
 
 	// interrupts
 	vga.irq(vga_irq);
@@ -75,11 +77,11 @@ int sc_main(int, char **) {
 
 	//      port             start addr         size
 	bus.map(inst_ram.target, INST_RAM_BASEADDR, INST_RAM_SIZE);
-	bus.map(vga.target, VGA_BASEADDR, VGA_SIZE);
-	bus.map(gpio.target, GPIO_BASEADDR, GPIO_SIZE);
-	bus.map(timer.target, TIMER_BASEADDR, TIMER_SIZE);
-	bus.map(intc.target, INTC_BASEADDR, INTC_SIZE);
-
+	bus.map(vga.target,      VGA_BASEADDR,      VGA_SIZE);
+	bus.map(gpio.target,     GPIO_BASEADDR,     GPIO_SIZE);
+	bus.map(timer.target,    TIMER_BASEADDR,    TIMER_SIZE);
+	bus.map(intc.target,     INTC_BASEADDR,     INTC_SIZE);
+	bus.map(uart.target,     UART_BASEADDR,     UART_SIZE);
 
 	// start the simulation
 	sc_core::sc_start();

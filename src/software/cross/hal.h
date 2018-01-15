@@ -25,7 +25,22 @@ void microblaze_enable_interrupts(void) {
 	      "mts     rmsr, r3");
 }
 
-/* TODO: printf is disabled, for now ... */
-#define printf(...) do {} while(0)
+#define printf(string) do { \
+    uint32_t base_addr = ((uint32_t) (string)) & ~0x3; \
+    uint32_t cur_word = hal_read32(base_addr); \
+    uint32_t cur_char = (cur_word & 0xFF000000) >> 24; \
+    uint32_t i = 0, j = 0; \
+    while (cur_char != '\0') { \
+        hal_write32(UART_BASEADDR + UART_FIFO_WRITE, cur_char); \
+        j++; \
+        if (j > 3) { \
+            j = 0; \
+            i++; \
+            cur_word = hal_read32(base_addr + 4 * i); \
+        } \
+        cur_char = (cur_word >> ((3 - j) * 8)) & 0xFF; \
+    } \
+} while(0)
+
 
 #endif /* HAL_H */
