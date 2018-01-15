@@ -17,8 +17,18 @@
 
 #define hal_read32(a)      (*((uint32_t *)(a)))
 #define hal_write32(a, d)  (*((uint32_t *)(a)) = (d))
-#define hal_wait_for_irq() /* TODO */
-#define hal_cpu_relax() /* TODO */
+
+extern volatile int irq_received;
+
+void hal_cpu_relax() {
+    // NOOP
+}
+
+void hal_wait_for_irq() {
+    while (!irq_received) { hal_cpu_relax(); }
+    irq_received = 0;
+}
+
 
 void microblaze_enable_interrupts(void) {
 	__asm("ori     r3, r0, 2\n"

@@ -24,8 +24,7 @@ MBWrapper::MBWrapper(sc_core::sc_module_name name)
 	m_iss.reset();
 	m_iss.setIrq(false);
 	SC_THREAD(run_iss);
-        /* The method that is needed to forward the interrupts from the SystemC
-         * environment to the ISS need to be declared here */
+	SC_METHOD(handle_irq);
 }
 
 /* IRQ forwarding method to be defined here */
@@ -107,9 +106,18 @@ void MBWrapper::run_iss(void) {
 				                  mem_wdata);
 			}
 			m_iss.step();
-                        /* IRQ handling to be done */
+			inst_count++;
+			if (inst_count > 5) {
+				inst_count = 0;
+				m_iss.setIrq(false);
+			}
 		}
 
 		wait(PERIOD);
 	}
+}
+
+void MBWrapper::handle_irq() {
+	next_trigger(irq.posedge_event());
+	m_iss.setIrq(true);
 }
